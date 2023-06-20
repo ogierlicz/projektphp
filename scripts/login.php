@@ -40,7 +40,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 				//echo session_id();
 				$_SESSION["logged"]["session_id"] = session_id();
 				//$_SESSION["logged"]["role_id"] = $user["role_id"];
-				echo "ok";
+				$stmt = $conn->prepare("SELECT role_id FROM users WHERE email = ?");
+				$stmt->bind_param("s", $login);
+				$stmt->execute();
+				$roleResult = $stmt->get_result();
+				$roleRow = $roleResult->fetch_assoc();
+				$role_id = $roleRow['role_id'];
+				if ($role_id == 1){
+					header("Location: ../pages/view/student.php");
+					exit();
+				} elseif ($role_id == 2){
+					header("Location: ../pages/view/teacher.php");
+					exit();
+				} elseif($role_id == 3){
+					header("Location: ../pages/view/admin.php");
+					exit();
+				}
 			}else{
 				$_SESSION["error_message"] = "Błędny login lub hasło!";
 				echo "<script>history.back();</script>";
