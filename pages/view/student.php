@@ -38,6 +38,9 @@ session_start();
           <li class="nav-item">
             <a href="student.php" class="nav-link">Oceny</a>
           </li>
+          <li class="nav-item">
+            <a href="index.php" class="nav-link">Wyloguj</a>
+          </li>
         </ul>
       </div>
     </div>

@@ -40,6 +40,9 @@
           <li class="nav-item">
             <a href="admin.php" class="nav-link">Użytkownicy</a>
           </li>
+          <li class="nav-item">
+            <a href="index.php" class="nav-link">Wyloguj</a>
+          </li>
             </ul>
           </li>
         </ul>
