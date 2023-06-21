@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,13 +57,12 @@
                   <th>Przedmiot</th>
                   <th>Data</th>
                   <th>Ocena</th>
+                  <th>Prowadzący</th>
                 </tr>
               </thead>
               <tbody>
                 <!-- Tutaj zostaną wyświetlone oceny z bazy danych -->
                 <?php
-                session_start();
-
                 // Pobierz identyfikator użytkownika z sesji
                 $studentId = $_SESSION["id"];
 
@@ -69,8 +72,11 @@
                     die("Nie udało się połączyć z bazą danych: " . $conn->connect_error);
                 }
 
-                $result = $conn->query("SELECT przedmiot, data_oceny, ocena FROM oceny WHERE user_id = '$studentId'");
-
+                $result = $conn->query("SELECT oceny.przedmiot, oceny.data_oceny, oceny.ocena, users.firstName, users.lastName, nauczyciele.firstName AS prowadzacyFirstName, nauczyciele.lastName AS prowadzacyLastName 
+                                      FROM oceny 
+                                      INNER JOIN users ON oceny.user_id = users.id 
+                                      INNER JOIN users AS nauczyciele ON oceny.nauczyciel_id = nauczyciele.id 
+                                      WHERE oceny.user_id = '$studentId'");
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
@@ -78,10 +84,11 @@
                         echo "<td>" . $row["przedmiot"] . "</td>";
                         echo "<td>" . $row["data_oceny"] . "</td>";
                         echo "<td>" . $row["ocena"] . "</td>";
+                        echo "<td>" . $row["prowadzacyFirstName"] . " " . $row["prowadzacyLastName"] . "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='3'>Brak ocen</td></tr>";
+                    echo "<tr><td colspan='4'>Brak ocen</td></tr>";
                 }
 
                 $conn->close();
