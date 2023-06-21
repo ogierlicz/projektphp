@@ -57,11 +57,11 @@ function sanitizeInput($input){
 		require_once "./connect.php";
 
 		try{
-			$role_id = 1;
-			$stmt = $conn->prepare("INSERT INTO `users` (`email`, `firstName`, `lastName`, `birthday`, `password`, `role_id`) VALUES (?, ?, ?, ?, ?, ?)");
+			$role = "student";
+			$stmt = $conn->prepare("INSERT INTO `users` (`email`, `firstName`, `lastName`, `birthday`, `password`, `role`) VALUES (?, ?, ?, ?, ?, ?)");
 
 			$pass = password_hash($pass, PASSWORD_ARGON2ID);
-			$stmt->bind_param("sssssi", $email, $firstName, $lastName, $birthday, $pass, $role_id);
+			$stmt->bind_param("ssssss", $email, $firstName, $lastName, $birthday, $pass, $role);
 			if ($stmt->execute()){
 				$_SESSION["success"] = "Prawidłowo dodano użytkownika $firstName $lastName";
 				header("location: ../pages/view");

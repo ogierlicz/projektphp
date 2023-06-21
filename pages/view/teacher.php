@@ -37,81 +37,102 @@
           <li class="nav-item">
             <a href="teacher.php" class="nav-link">Plan zajęć</a>
           </li>
-            </ul>
-          </li>
         </ul>
-</nav>
-<div class="container mt-4">
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
     <div class="row">
-        <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Oceny</h3>
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <div class="input-group-append">
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>Przedmiot</th>
-                      <th>Data</th>
-                      <th>Uczeń</th>
-                      <th>Ocena</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Elektronika</td>
-                      <td>11-7-2014</td>
-                      <td>Adam Burdelski</td>
-                      <td>5.5</td>
-                    </tr>
-                    <tr>
-                      <td>Programowanie strukturalne</td>
-                      <td>11-7-2014</td>
-                      <td>Adam Burdelski</td>
-                      <td>5.0</td>
-                    </tr>
-                    <tr>
-                      <td>Technologie internetowe</td>
-                      <td>11-7-2014</td>
-                      <td>Adam Burdelski</td>
-                      <td>3.5</td>
-                    </tr>
-                    <tr>
-                      <td>Uczenie maszynowe</td>
-                      <td>11-7-2014</td>
-                      <td>Adam Burdelski</td>
-                      <td>4.0</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Oceny</h3>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>Przedmiot</th>
+                  <th>Data</th>
+                  <th>Uczeń</th>
+                  <th>Ocena</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Tutaj zostaną wyświetlone oceny z bazy danych -->
+                <?php
+                $conn = new mysqli("localhost", "root", "", "projekt_db");
+
+                if ($conn->connect_error) {
+                    die("Nie udało się połączyć z bazą danych: " . $conn->connect_error);
+                }
+
+                $result = $conn->query("SELECT o.przedmiot, o.data_oceny, CONCAT(u.firstName, ' ', u.lastName) AS uczen, o.ocena FROM oceny o JOIN users u ON o.user_id = u.id WHERE u.role = 'student'");
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row["przedmiot"] . "</td>";
+                        echo "<td>" . $row["data_oceny"] . "</td>";
+                        echo "<td>" . $row["uczen"] . "</td>";
+                        echo "<td>" . $row["ocena"] . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4'>Brak ocen</td></tr>";
+                }
+
+                $conn->close();
+                ?>
+              </tbody>
+            </table>
           </div>
         </div>
+
+        <div class="card mt-4">
+          <div class="card-header">
+            <h3 class="card-title">Dodaj ocenę</h3>
+          </div>
+          <div class="card-body">
+            <form action="../../scripts/add_grade.php" method="POST">
+              <div class="form-group">
+                <label for="uczen">Uczeń:</label>
+                <select name="uczen" id="uczen" class="form-control">
+                  <?php
+                  $conn = new mysqli("localhost", "root", "", "projekt_db");
+
+                  if ($conn->connect_error) {
+                      die("Nie udało się połączyć z bazą danych: " . $conn->connect_error);
+                  }
+
+                  $result = $conn->query("SELECT id, CONCAT(firstName, ' ', lastName) AS uczen FROM users WHERE role = 'student'");
+
+                  if ($result->num_rows > 0) {
+                      while ($row = $result->fetch_assoc()) {
+                          echo "<option value='" . $row["id"] . "'>" . $row["uczen"] . "</option>";
+                      }
+                  }
+
+                  $conn->close();
+                  ?>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="przedmiot">Przedmiot:</label>
+                <input type="text" name="przedmiot" id="przedmiot" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="ocena">Ocena:</label>
+                <input type="text" name="ocena" id="ocena" class="form-control">
+              </div>
+              <button type="submit" class="btn btn-primary">Dodaj</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
-
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
-
-
 </body>
+</html>
