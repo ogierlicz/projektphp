@@ -1,6 +1,15 @@
 <?php
 session_start();
 
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    redirect("../pages/view/teacher.php");
+}
+
+function redirect($url) {
+    header("Location: $url");
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $uczenId = $_POST["uczen"];
     $przedmiot = $_POST["przedmiot"];
@@ -29,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $insertQuery = "INSERT INTO oceny (user_id, przedmiot, ocena, data_oceny, nauczyciel_id) VALUES ($uczenId, '$przedmiot', $ocena, CURDATE(), $nauczycielId)";
 
     if ($conn->query($insertQuery) === TRUE) {
-        echo "Ocena została dodana.";
+        redirect("../pages/view/teacher.php");
     } else {
         echo "Wystąpił błąd podczas dodawania oceny: " . $conn->error;
     }
