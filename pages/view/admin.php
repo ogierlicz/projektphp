@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -108,7 +111,7 @@ if (isset($_GET["updateUser"])){
         <td>$user[password]</td>
         <td>$user[birthday]</td>
         <td>$user[role]</td>
-        <td><a href="../../scripts/delete_user.php?userDeleteId=$user[userId]">Usuń</a></td>
+        <td><a href="../../scripts/deleteUser.php?userDeleteId=$user[userId]">Usuń</a></td>
         <td><a href="./admin.php?userUpdateId=$user[userId]">Edytuj</a></td>
       </tr>
 TABLEUSERS;
@@ -127,14 +130,13 @@ TABLEUSERS;
         <input type="text" name="password" placeholder="Podaj hasło"><br><br>
         <input type="date" name="birthday"> Data urodzenia <br><br>
         <select name="role">
-<!--        <input type="number" name="role" placeholder="Podaj rolę"><br><br>-->
 ADDUSERFORM;
       //rola
       $sql = "SELECT DISTINCT role FROM users;";
       $result = $conn->query($sql);
       if ($result->num_rows > 0) {
       while ($role = $result->fetch_assoc()){
-        echo "<option value='$role[id]'>$role[role]</option>";
+        echo "<option>$role[role]</option>";
       }
     }
 	  echo <<< ADDUSERFORM
@@ -155,7 +157,7 @@ if (isset($_GET["userUpdateId"])){
   $updateUser = $result->fetch_assoc();
 
   echo <<< UPDATEUSERFORM
-    <form action="./scripts/updateUser.php" method="POST">
+    <form action="../../scripts/updateUser.php" method="POST">
       <input type="text" name="firstName" value="$updateUser[firstName]"><br><br>
       <input type="text" name="lastName" value="$updateUser[lastName]"><br><br>
       <input type="text" name="email" value="$updateUser[email]"><br><br>

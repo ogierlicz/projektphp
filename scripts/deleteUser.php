@@ -8,4 +8,5 @@
 	} else {
 		echo "<h4>Usunięto rekord o ID: $userId</h4>";
 	}
+	header("location: ../pages/view/admin.php");
 ?>
