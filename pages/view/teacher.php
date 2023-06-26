@@ -123,11 +123,17 @@
               </div>
               <div class="form-group">
                 <label for="przedmiot">Przedmiot:</label>
-                <input type="text" name="przedmiot" id="przedmiot" class="form-control">
+                <select name="przedmiot" id="przedmiot" class="form-control">
+                  <option>Programowanie</option>
+                  <option>Matematyka</option>
+                  <option>Technologie Internetowe</option>
+                  <option>Wychowanie Fizyczne</option>
+                  <option>Webdesign</option>
+                </select>
               </div>
               <div class="form-group">
                 <label for="ocena">Ocena:</label>
-                <input type="text" name="ocena" id="ocena" class="form-control">
+                <input type="number" name="ocena" id="ocena" class="form-control" min="1" max="6">
               </div>
               <button type="submit" class="btn btn-primary">Dodaj</button>
             </form>
