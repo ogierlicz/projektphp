@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 					header("Location: ../pages/view/teacher.php");
 					exit();
 				} elseif($role == "admin"){
+					$_SESSION["id"] = $user["id"];
 					header("Location: ../pages/view/admin.php");
 					exit();
 				}

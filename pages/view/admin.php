@@ -214,7 +214,7 @@ UPDATEUSERFORM;
                     die("Nie udało się połączyć z bazą danych: " . $conn->connect_error);
                 }
 
-                $result = $conn->query("SELECT o.przedmiot, o.data_oceny, CONCAT(u.firstName, ' ', u.lastName) AS uczen, o.ocena FROM oceny o JOIN users u ON o.user_id = u.id WHERE u.role = 'student'");
+                $result = $conn->query("SELECT o.id, o.przedmiot, o.data_oceny, CONCAT(u.firstName, ' ', u.lastName) AS uczen, o.ocena FROM oceny o JOIN users u ON o.user_id = u.id WHERE u.role = 'student'");
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
@@ -223,6 +223,7 @@ UPDATEUSERFORM;
                         echo "<td>" . $row["data_oceny"] . "</td>";
                         echo "<td>" . $row["uczen"] . "</td>";
                         echo "<td>" . $row["ocena"] . "</td>";
+                        echo "<td><a href='../../scripts/deleteGrade.php?deleteGradeId={$row["id"]}'>Usuń</a></td>";
                         echo "</tr>";
                     }
                 } else {
@@ -259,7 +260,6 @@ UPDATEUSERFORM;
                           echo "<option value='" . $row["id"] . "'>" . $row["uczen"] . "</option>";
                       }
                   }
-                  session_destroy();
                   $conn->close();
                   ?>
                 </select>

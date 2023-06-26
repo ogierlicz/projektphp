@@ -1,10 +1,10 @@
 <?php
 session_start();
 
+
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     header("location: ../pages/view/teacher.php");
 }
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $uczenId = $_POST["uczen"];
@@ -26,6 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Nie udało się połączyć z bazą danych: " . $conn->connect_error);
     }
 
+   
+
+    $checkroleQuery = "SELECT id, role FROM users WHERE id = $nauczycielId";
+    $checkroleResult = $conn->query($checkroleQuery);
+    $rowRole = $checkroleResult->fetch_assoc();
+    $role = $rowRole['role'];
+
     // Sprawdź, czy wybrany uczeń istnieje
     $checkQuery = "SELECT id FROM users WHERE id = $uczenId AND role = 'student'";
     $checkResult = $conn->query($checkQuery);
@@ -43,10 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // redirect("../pages/view/teacher.php");
         // header('Location: '.$_SERVER['PHP_SELF']);
         // die;
-        $checkroleQuery = "SELECT role FROM users WHERE id = $nauczycielId";
-        $checkroleResult = $conn->query($checkroleQuery);
-        $rowRole = $checkroleResult->fetch_assoc();
-        $role = $rowRole['role'];
+        
         if ($role == "teacher"){
             header("Location: ../pages/view/teacher.php");
         }
