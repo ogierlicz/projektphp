@@ -35,13 +35,10 @@
         <!-- Left navbar links -->
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a href="admin.php" class="nav-link">Oceny</a>
+            <a href="#Oceny" class="nav-link">Oceny</a>
           </li>
           <li class="nav-item">
-            <a href="admin.php" class="nav-link">Plan zajęć</a>
-          </li>
-          <li class="nav-item">
-            <a href="admin.php" class="nav-link">Użytkownicy</a>
+            <a href="#Uzytkownicy" class="nav-link">Uzytkownicy</a>
           </li>
           <li class="nav-item">
             <a href="index.php" class="nav-link">Wyloguj</a>
@@ -51,7 +48,7 @@
         </ul>
 </nav>
 
-
+<section id="Uzytkownicy">
   <div class="card-header">
   <h3 class="card-title">Użytkownicy</h3>
 </div>
@@ -186,8 +183,9 @@ UPDATEUSERFORM;
 
 	$conn->close();
 	?>
+  </section>
 
-
+<section id="Oceny">
 <div class="container mt-4">
     <div class="row">
       <div class="col-12">
@@ -236,6 +234,7 @@ UPDATEUSERFORM;
             </table>
           </div>
         </div>
+              </section>
 
         <div class="card mt-4">
           <div class="card-header">

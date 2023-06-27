@@ -35,9 +35,6 @@
             <a href="teacher.php" class="nav-link">Wystawianie Ocen</a>
           </li>
           <li class="nav-item">
-            <a href="teacher.php" class="nav-link">Plan zajęć</a>
-          </li>
-          <li class="nav-item">
             <a href="index.php" class="nav-link">Wyloguj</a>
           </li>
         </ul>
