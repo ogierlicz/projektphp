@@ -19,6 +19,21 @@ function sanitizeInput($input){
 			}
 		}
 
+		if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/', $_POST["pass"])) {
+			if (!preg_match('/[A-Z]/', $_POST["pass"])) {
+				$errors[] = "Hasło musi zawierać <b>co najmniej jedną dużą literę</b>.";
+			}
+			if (!preg_match('/\d/', $_POST["pass"])) {
+				$errors[] = "Hasło musi zawierać <b>co najmniej jedną cyfrę</b>.";
+			}
+			if (!preg_match('/[!@#$%^&*]/', $_POST["pass"])) {
+				$errors[] = "Hasło musi zawierać <b>co najmniej jeden znak specjalny (!@#$%^&*)</b>.";
+			}
+			if (strlen($_POST["pass"]) < 8) {
+				$errors[] = "Hasło musi mieć <b>co najmniej 8 znaków</b>.";
+			}
+		}
+
 		if ($_POST["email"] != $_POST["confirm_email"])
 			$errors[] = "Adresy email muszą być identyczne";
 
