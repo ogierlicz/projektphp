@@ -19,14 +19,45 @@ function sanitizeInput($input){
 			}
 		}
 
+		if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/', $_POST["pass"])) {
+			if (!preg_match('/[A-Z]/', $_POST["pass"])) {
+				$errors[] = "<b>Hasło musi zawierać co najmniej jedną dużą literę</b>.";
+			}
+			if (!preg_match('/\d/', $_POST["pass"])) {
+				$errors[] = "<b>Hasło musi zawierać co najmniej jedną cyfrę</b>.";
+			}
+			if (!preg_match('/[!@#$%^&*]/', $_POST["pass"])) {
+				$errors[] = "<b>Hasło musi zawierać co najmniej jeden znak specjalny (!@#$%^&*)</b>.";
+			}
+			if (strlen($_POST["pass"]) < 8) {
+				$errors[] = "<b>Hasło musi mieć co najmniej 8 znaków</b>.";
+			}
+		}
+
+		if (!preg_match('/^([A-ZĄĆĘŁŃÓŚŹŻ])/u', $_POST["firstName"])) {
+			$errors[] = "<b>Imię musi się zaczynać z dużej litery (A-Z)</b>.";
+		}
+		
+		if (!preg_match('/[a-ząćęłńóśźż]+$/u', $_POST["firstName"])) {
+			$errors[] = "<b>Imię może zawierać jedynie litery (a-z)</b>.";
+		}
+
+		if (!preg_match('/^([A-ZĄĆĘŁŃÓŚŹŻ])/u', $_POST["lastName"])) {
+			$errors[] = "<b>Nazwisko musi się zaczynać z dużej litery (A-Z)</b>.";
+		}
+		
+		if (!preg_match('/[a-ząćęłńóśźż]+$/u', $_POST["lastName"])) {
+			$errors[] = "<b>Nazwisko może zawierać jedynie litery (a-z)</b>.";
+		}	
+		
 		if ($_POST["email"] != $_POST["confirm_email"])
-			$errors[] = "Adresy email muszą być identyczne";
+			$errors[] = "<b>Adresy email muszą być identyczne</b>.";
 
 		if ($_POST["pass"] != $_POST["confirm_pass"])
-			$errors[] = "Hasła muszą być identyczne";
+			$errors[] = "<b>Hasła muszą być identyczne</b>.";
 
 		if (!isset($_POST["terms"]))
-			$errors[] = "Zatwierdź regulamin";
+			$errors[] = "<b>Zatwierdź regulamin</b>.";
 
 		if (!empty($errors)){
 			print_r($errors);
@@ -57,11 +88,11 @@ function sanitizeInput($input){
 		require_once "./connect.php";
 
 		try{
-			$role_id = 1;
-			$stmt = $conn->prepare("INSERT INTO `users` (`email`, `firstName`, `lastName`, `birthday`, `password`, `role_id`) VALUES (?, ?, ?, ?, ?, ?)");
+			$role = "student";
+			$stmt = $conn->prepare("INSERT INTO `users` (`email`, `firstName`, `lastName`, `birthday`, `password`, `role`) VALUES (?, ?, ?, ?, ?, ?)");
 
 			$pass = password_hash($pass, PASSWORD_ARGON2ID);
-			$stmt->bind_param("sssssi", $email, $firstName, $lastName, $birthday, $pass, $role_id);
+			$stmt->bind_param("ssssss", $email, $firstName, $lastName, $birthday, $pass, $role);
 			if ($stmt->execute()){
 				$_SESSION["success"] = "Prawidłowo dodano użytkownika $firstName $lastName";
 				header("location: ../pages/view");

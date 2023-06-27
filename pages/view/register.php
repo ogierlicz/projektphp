@@ -23,7 +23,7 @@
     if (isset($_SESSION['error_message'])){
       echo <<< ERROR
         <div class="callout callout-danger">
-           <h5>Błąd!</h5>
+           <h5><b>Błąd!</b></h5>
            <p>$_SESSION[error_message]</p>
         </div>
 ERROR;

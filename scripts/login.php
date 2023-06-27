@@ -40,19 +40,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 				//echo session_id();
 				$_SESSION["logged"]["session_id"] = session_id();
 				//$_SESSION["logged"]["role_id"] = $user["role_id"];
-				$stmt = $conn->prepare("SELECT role_id FROM users WHERE email = ?");
+				$stmt = $conn->prepare("SELECT role FROM users WHERE email = ?");
 				$stmt->bind_param("s", $login);
 				$stmt->execute();
 				$roleResult = $stmt->get_result();
 				$roleRow = $roleResult->fetch_assoc();
-				$role_id = $roleRow['role_id'];
-				if ($role_id == 1){
+				$role = $roleRow['role'];
+				if ($role == "student"){
+					$_SESSION["id"] = $user["id"];
 					header("Location: ../pages/view/student.php");
 					exit();
-				} elseif ($role_id == 2){
+				} elseif ($role == "teacher"){
+					$_SESSION["id"] = $user["id"];
 					header("Location: ../pages/view/teacher.php");
 					exit();
-				} elseif($role_id == 3){
+				} elseif($role == "admin"){
+					$_SESSION["id"] = $user["id"];
 					header("Location: ../pages/view/admin.php");
 					exit();
 				}

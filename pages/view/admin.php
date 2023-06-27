@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,29 +35,257 @@
         <!-- Left navbar links -->
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a href="admin.php" class="nav-link">Oceny</a>
+            <a href="#Oceny" class="nav-link">Oceny</a>
           </li>
           <li class="nav-item">
-            <a href="admin.php" class="nav-link">Plan zajęć</a>
+            <a href="#Uzytkownicy" class="nav-link">Uzytkownicy</a>
           </li>
           <li class="nav-item">
-            <a href="admin.php" class="nav-link">Użytkownicy</a>
+            <a href="index.php" class="nav-link">Wyloguj</a>
           </li>
             </ul>
           </li>
         </ul>
 </nav>
 
-<!-- REQUIRED SCRIPTS -->
+<section id="Uzytkownicy">
+  <div class="card-header">
+  <h3 class="card-title">Użytkownicy</h3>
+</div>
+<?php
+if (isset($_GET['userIdDelete'])) {
+	$deletedUserId = $_GET['userIdDelete'];
+	if ($deletedUserId == 0) {
+		echo "<h4>Nie znaleziono użytkownika do usunięcia</h4>";
+	} else {
+		echo "<h4>Usunięto rekord o ID: $deletedUserId</h4>";
+	}
+}
 
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
+if (isset($_GET["addUser"])){
+  if ($_GET["addUser"] == 0){
+    echo "<h4>Nie udało się dodać użytkownika!</h4>";
+  }else{
+    echo "<h4>Dodano nowego użytkownika</h4>";
+  }
+}
+
+if (isset($_GET["updateUser"])){
+	if ($_GET["updateUser"] == 0){
+		echo "<h4>Nie udało się zaktualizować użytkownika!</h4>";
+	}else{
+		echo "<h4>Zaktualizowano użytkownika</h4>";
+	}
+  unset($_SESSION["userUpdateId"]);
+}
+?>
+
+<table class="table table-hover">
+	<tr>
+		<th>Imię</th>
+		<th>Nazwisko</th>
+		<th>Email</th>
+		<th>Hasło</th>
+		<th>Data urodzenia</th>
+    <th>Rola</th>
+	</tr>
+
+	<?php
+	require_once "../../scripts/connect.php";
+	$sql = "SELECT id userId, firstName, lastName, email, password, birthday, role FROM users";
+	$result = $conn->query($sql);
+	//echo $result->num_rows;
+
+	if ($result->num_rows == 0){
+		echo "<tr><td colspan='100%'>Brak rekordów do wyświetlenia</td></tr>";
+	}else{
+		while($user = $result->fetch_assoc()){
+			echo <<< TABLEUSERS
+      <tr>
+        <td>$user[firstName]</td>
+        <td>$user[lastName]</td>
+        <td>$user[email]</td>
+        <td>$user[password]</td>
+        <td>$user[birthday]</td>
+        <td>$user[role]</td>
+        <td><a href="../../scripts/deleteUser.php?userDeleteId=$user[userId]">Usuń</a></td>
+        <td><a href="./admin.php?userUpdateId=$user[userId]">Edytuj</a></td>
+      </tr>
+TABLEUSERS;
+		}
+	}
+	echo "</table><hr>";
+
+ //formularz dodawania użytkownika
+  if (isset($_GET["showFormAddUser"])){
+    echo "<h4>Dodawanie użytkownika</h4>";
+    echo <<< ADDUSERFORM
+      <form action="../../scripts/addUser.php" method="POST">
+        <input type="text" name="firstName" placeholder="Podaj imię"><br><br>
+        <input type="text" name="lastName" placeholder="Podaj nazwisko"><br><br>
+        <input type="text" name="email" placeholder="Podaj email"><br><br>
+        <input type="text" name="password" placeholder="Podaj hasło"><br><br>
+        <input type="date" name="birthday"> Data urodzenia <br><br>
+        <select name="role">
+ADDUSERFORM;
+      //rola
+      $sql = "SELECT DISTINCT role FROM users;";
+      $result = $conn->query($sql);
+      if ($result->num_rows > 0) {
+      while ($role = $result->fetch_assoc()){
+        echo "<option>$role[role]</option>";
+      }
+    }
+	  echo <<< ADDUSERFORM
+    </select><br><br>
+        <input type="submit" value="Dodaj użytkownika">
+      </form>
+ADDUSERFORM;
+  }else{
+    echo '<a href="./admin.php?showFormAddUser=1">Dodaj użytkownika</a>';
+  }
+
+	// formularz aktualizacji użytkownika
+if (isset($_GET["userUpdateId"])){
+  $_SESSION["userUpdateId"] = $_GET["userUpdateId"];
+  echo "<h4>Aktualizacja użytkownika</h4>";
+  $sql = "SELECT * FROM users WHERE users.`id`='$_GET[userUpdateId]'";
+  $result = $conn->query($sql);
+  $updateUser = $result->fetch_assoc();
+
+  echo <<< UPDATEUSERFORM
+    <form action="../../scripts/updateUser.php" method="POST">
+      <input type="text" name="firstName" value="$updateUser[firstName]"><br><br>
+      <input type="text" name="lastName" value="$updateUser[lastName]"><br><br>
+      <input type="text" name="email" value="$updateUser[email]"><br><br>
+      <input type="text" name="password" value="$updateUser[password]"><br><br>
+      <input type="date" name="birthday" value="$updateUser[birthday]"> Data urodzenia <br><br>
+      <select name="role">
+UPDATEUSERFORM;
+
+  // rola
+  $sql = "SELECT DISTINCT role FROM users;";
+  $result = $conn->query($sql);
+  while ($role = $result->fetch_assoc()) {
+    if ($role["role"] == $updateUser["role"]) {
+      echo "<option value='$role[role]' selected>$role[role]</option>";
+    } else {
+      echo "<option value='$role[role]'>$role[role]</option>";
+    }
+  }
+
+  echo <<< UPDATEUSERFORM
+      </select><br><br>
+      <input type="submit" value="Aktualizuj użytkownika">
+    </form>
+UPDATEUSERFORM;
+}
+
+	$conn->close();
+	?>
+  </section>
+
+<section id="Oceny">
+<div class="container mt-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Oceny</h3>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>Przedmiot</th>
+                  <th>Data</th>
+                  <th>Uczeń</th>
+                  <th>Ocena</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Tutaj zostaną wyświetlone oceny z bazy danych -->
+                <?php
+                $conn = new mysqli("localhost", "root", "", "projekt_db");
+
+                if ($conn->connect_error) {
+                    die("Nie udało się połączyć z bazą danych: " . $conn->connect_error);
+                }
+
+                $result = $conn->query("SELECT o.id, o.przedmiot, o.data_oceny, CONCAT(u.firstName, ' ', u.lastName) AS uczen, o.ocena FROM oceny o JOIN users u ON o.user_id = u.id WHERE u.role = 'student'");
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row["przedmiot"] . "</td>";
+                        echo "<td>" . $row["data_oceny"] . "</td>";
+                        echo "<td>" . $row["uczen"] . "</td>";
+                        echo "<td>" . $row["ocena"] . "</td>";
+                        echo "<td><a href='../../scripts/deleteGrade.php?deleteGradeId={$row["id"]}'>Usuń</a></td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4'>Brak ocen</td></tr>";
+                }
+
+                $conn->close();
+                ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+              </section>
+
+        <div class="card mt-4">
+          <div class="card-header">
+            <h3 class="card-title">Dodaj ocenę</h3>
+          </div>
+          <div class="card-body">
+            <form action="../../scripts/add_grade.php" method="POST">
+              <div class="form-group">
+                <label for="uczen">Uczeń:</label>
+                <select name="uczen" id="uczen" class="form-control">
+                  <?php
+                  $conn = new mysqli("localhost", "root", "", "projekt_db");
+
+                  if ($conn->connect_error) {
+                      die("Nie udało się połączyć z bazą danych: " . $conn->connect_error);
+                  }
+
+                  $result = $conn->query("SELECT id, CONCAT(firstName, ' ', lastName) AS uczen FROM users WHERE role = 'student'");
+
+                  if ($result->num_rows > 0) {
+                      while ($row = $result->fetch_assoc()) {
+                          echo "<option value='" . $row["id"] . "'>" . $row["uczen"] . "</option>";
+                      }
+                  }
+                  $conn->close();
+                  ?>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="przedmiot">Przedmiot:</label>
+                <select name="przedmiot" id="przedmiot" class="form-control">
+                  <option>Programowanie</option>
+                  <option>Matematyka</option>
+                  <option>Technologie Internetowe</option>
+                  <option>Wychowanie Fizyczne</option>
+                  <option>Webdesign</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ocena">Ocena:</label>
+                <input type="number" name="ocena" id="ocena" class="form-control" min="1" max="6">
+              </div>
+              <button type="submit" class="btn btn-primary">Dodaj</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
 
 </body>
