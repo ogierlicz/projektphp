@@ -21,27 +21,43 @@ function sanitizeInput($input){
 
 		if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/', $_POST["pass"])) {
 			if (!preg_match('/[A-Z]/', $_POST["pass"])) {
-				$errors[] = "Hasło musi zawierać <b>co najmniej jedną dużą literę</b>.";
+				$errors[] = "<b>Hasło musi zawierać co najmniej jedną dużą literę</b>.";
 			}
 			if (!preg_match('/\d/', $_POST["pass"])) {
-				$errors[] = "Hasło musi zawierać <b>co najmniej jedną cyfrę</b>.";
+				$errors[] = "<b>Hasło musi zawierać co najmniej jedną cyfrę</b>.";
 			}
 			if (!preg_match('/[!@#$%^&*]/', $_POST["pass"])) {
-				$errors[] = "Hasło musi zawierać <b>co najmniej jeden znak specjalny (!@#$%^&*)</b>.";
+				$errors[] = "<b>Hasło musi zawierać co najmniej jeden znak specjalny (!@#$%^&*)</b>.";
 			}
 			if (strlen($_POST["pass"]) < 8) {
-				$errors[] = "Hasło musi mieć <b>co najmniej 8 znaków</b>.";
+				$errors[] = "<b>Hasło musi mieć co najmniej 8 znaków</b>.";
 			}
 		}
 
+		if (!preg_match('/^([A-ZĄĆĘŁŃÓŚŹŻ])/u', $_POST["firstName"])) {
+			$errors[] = "<b>Imię musi się zaczynać z dużej litery (A-Z)</b>.";
+		}
+		
+		if (!preg_match('/[a-ząćęłńóśźż]+$/u', $_POST["firstName"])) {
+			$errors[] = "<b>Imię może zawierać jedynie litery (a-z)</b>.";
+		}
+
+		if (!preg_match('/^([A-ZĄĆĘŁŃÓŚŹŻ])/u', $_POST["lastName"])) {
+			$errors[] = "<b>Nazwisko musi się zaczynać z dużej litery (A-Z)</b>.";
+		}
+		
+		if (!preg_match('/[a-ząćęłńóśźż]+$/u', $_POST["lastName"])) {
+			$errors[] = "<b>Nazwisko może zawierać jedynie litery (a-z)</b>.";
+		}	
+		
 		if ($_POST["email"] != $_POST["confirm_email"])
-			$errors[] = "Adresy email muszą być identyczne";
+			$errors[] = "<b>Adresy email muszą być identyczne</b>.";
 
 		if ($_POST["pass"] != $_POST["confirm_pass"])
-			$errors[] = "Hasła muszą być identyczne";
+			$errors[] = "<b>Hasła muszą być identyczne</b>.";
 
 		if (!isset($_POST["terms"]))
-			$errors[] = "Zatwierdź regulamin";
+			$errors[] = "<b>Zatwierdź regulamin</b>.";
 
 		if (!empty($errors)){
 			print_r($errors);
