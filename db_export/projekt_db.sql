@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 22 Cze 2023, 01:48
+-- Czas generowania: 28 Cze 2023, 07:27
 -- Wersja serwera: 10.4.27-MariaDB
 -- Wersja PHP: 8.2.0
 
@@ -41,10 +41,9 @@ CREATE TABLE `oceny` (
 --
 
 INSERT INTO `oceny` (`id`, `user_id`, `przedmiot`, `ocena`, `data_oceny`, `nauczyciel_id`) VALUES
-(7, 1, 'Programowanie', 2, '2023-06-22', 15),
-(8, 1, 'Elektronika', 5, '2023-06-22', 15),
-(9, 1, 'najlepszy przedmiot', 7, '2023-06-22', 15),
-(10, 1, 'Uczenie maszynowe', 3, '2023-06-22', 16);
+(11, 1, 'Matematyka', 5, '2023-06-28', 17),
+(12, 1, 'Programowanie', 4, '2023-06-28', 17),
+(13, 1, 'Technologie Internetowe', 5, '2023-06-28', 15);
 
 -- --------------------------------------------------------
 
@@ -67,10 +66,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `firstName`, `lastName`, `birthday`, `password`, `role`) VALUES
-(1, 'a@example.com', 'Adam', 'B', '2023-06-21', '$argon2id$v=19$m=65536,t=4,p=1$cWxvODdyOXNVRXY5WDczOQ$BG9gPSUBc5Owf5MOmXgCZl4+bk0JgzvZaDg+Xvyungw', 'student'),
-(14, 'j@pl.pl', 'Jan', 'Kowalski', '2023-06-21', '$argon2id$v=19$m=65536,t=4,p=1$RElqR3poWUtYM28vNWJqeQ$2sMvHPPHx3/hSrcPzYxj/2tCq5DqWwyFoWiy573kDxQ', 'student'),
-(15, 'ogierlicz@edu.cdv.pl', 'Oskar', 'Gierlicz', '2023-06-21', '$argon2id$v=19$m=65536,t=4,p=1$QUpyTjBjZU9UR3dlbzVDUw$1e8ifU/cTK6u2vNA4OWVCNRSiEdGmlfUAWm4ZQ8TYm4', 'teacher'),
-(16, 'k@gmail.pl', 'kamil', 'amrah', '2023-06-22', '$argon2id$v=19$m=65536,t=4,p=1$aVgzNkRCRE5kVGdlRnVmMg$ir6ReneULP1YzEBD0MbhabT67Zn8ruOy5glo0UEosIw', 'teacher');
+(1, 'a@example.com', 'Adam', 'Burdelski', '2023-06-21', '$argon2id$v=19$m=65536,t=4,p=1$NmxMUzM2Z211VEcwSnQyNQ$dBNlKKsTSlDWeC1W0SXHWIWMyCeDjqlO/bnUW0ANvhA', 'student'),
+(15, 'ogierlicz@edu.cdv.pl', 'Oskar', 'Gierlicz', '2023-06-21', '$argon2id$v=19$m=65536,t=4,p=1$aFpxOW5XR0svZ1NGR1JyYw$d2Zk+Xzuk6sONPcMKLpCPpdvtpwBafuLBV61u0dPhGw', 'teacher'),
+(17, 'pnowak@example.com', 'Piotr', 'Nowak', '2023-06-06', '$argon2id$v=19$m=65536,t=4,p=1$TXp6b3pBTkVJV3pVREg5dg$9uAOFp0sc6VGT23BtwUNvVmneGt0XpmolJeRGo7E9uo', 'admin');
 
 --
 -- Indeksy dla zrzutów tabel
@@ -97,13 +95,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT dla tabeli `oceny`
 --
 ALTER TABLE `oceny`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT dla tabeli `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Ograniczenia dla zrzutów tabel
